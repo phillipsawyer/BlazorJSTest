@@ -1,0 +1,16 @@
+﻿@page "/"
+@inject IJSRuntime JsRuntime
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+
+<JsTest></JsTest>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        JsRuntime.InvokeVoidAsync("attachHandlers");
+    }
+}

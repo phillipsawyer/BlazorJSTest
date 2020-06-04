@@ -1,0 +1,49 @@
+﻿@using System.Dynamic
+@using BlazorAppOfflineTest.Data
+@using BlazorAppOfflineTest.Shared
+@inject IJSRuntime JsRuntime
+
+<div style="border: 1px solid black;">
+    <h3>jsButton</h3>
+
+    <a id="button">
+        Button: @ButtonText
+    </a>
+
+
+    <EditForm id="main-form" Model="@jobApp" OnValidSubmit="@SubmitJobApp">
+        <p>
+            <input type="text" id="name">
+        </p>
+
+        <button type="submit">submit</button>
+    </EditForm>
+
+
+    <DivComponent Text="@DivText">Heres some test child content</DivComponent>
+</div>
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+
+    private string ButtonText = "Default";
+
+    private string DivText = "";
+
+    private JobApplication jobApp = new JobApplication();
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Text))
+        {
+            ButtonText = Text;
+        }
+    }
+
+    private async Task SubmitJobApp()
+    {
+        var jobApp = await JsRuntime.InvokeAsync<JobApplication>("submitForm", "#main-form");
+        DivText = jobApp.Name + " received by server";
+    }
+}
